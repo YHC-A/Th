@@ -38,7 +38,7 @@ yy2 = repmat(yy2, N, 1);
 
 for i = 1: N
     % Initial condition
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i))+0.6;
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.6;
     Y2(1,i)  =  0.1 * cos(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
     yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
