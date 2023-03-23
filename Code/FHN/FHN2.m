@@ -6,12 +6,14 @@ load FHN_finish_calling_solver.mat
 t(1) = 0;
 t0   = 0;    
 tf   = 20;
-t_sample = 0.001;
+t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
 
 l1 = 0;
 l2 = 1;
+xp1 = 6;
+xp2 = 16;
 x_sample = 1 / 20;
 zzz(1) = 0;
 
@@ -35,21 +37,43 @@ for i = 1: N
     yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
 end
 
+% The selected states for controller 
+y1tkv1 = Y1(1,xp1); 
+y2tkv1 = Y2(1,xp1);
+y1tkv2 = Y1(1,xp2);
+y2tkv2 = Y2(1,xp2);
+
 %% Dynamic 
 for it = 1: N_t-1
     for in = 1: N
         h1 = alpha^(-2) * Y1(it, in);
         h2 = 1 - h1;
         
+        % Mechanism at v = 0
+        if ( (it>=2) && (in == xp1) && [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * Omega{1} *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] < rho{1} *[Y1(it, xp1); Y2(it, xp1)]' * Omega{1} *  [Y1(it, xp1); Y2(it, xp1)])
+            fprintf("Does not pull the triggered at v1")
+        else
+            y1tkv1 = Y1(it, xp1);
+            y2tkv1 = Y2(it, xp1);
+        end
+        % Mechanism at v = 1
+        if ( (it>=2) && (in == xp2) && [y1tkv1-Y1(it, xp2); y2thv1-Y2(it, xp2)]' * Omega{1} *  [y1tkv1-Y1(it, xp2); y2thv1-Y2(it, xp2)] < rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * Omega{1} *  [Y1(it, xp2); Y2(it, xp2)])
+            fprintf("Does not pull the triggered at v2")
+        else
+            y1tkv2 = Y1(it, xp2);
+            y2tkv2 = Y2(it, xp2);
+        end
+        
+        % Euler
         if (in*x_sample <= 0.5)
             v = 1;
-            Y1(it+1, in) = Y1(it, in) + subs( t_sample * ( Theta(1, 1)*yy1(it,in) + h1*h1*(A{1}(1,:)+D{v}(1)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h1*h2*(A{1}(1,:)+D{v}(1)*K{v}{2})*[Y1(it,in); Y2(it,in)] + h2*h1*(A{2}(1,:)+D{v}(1)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h2*h2*(A{2}(1,:)+D{v}(1)*K{v}{2})*[Y1(it,in); Y2(it,in)] ), [y1; y2], [Y1(it,6); Y2(it,6)]);
-            Y2(it+1, in) = Y2(it, in) + subs( t_sample * ( Theta(2, 2)*yy2(it,in) + h1*h1*(A{1}(2,:)+D{v}(2)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h1*h2*(A{1}(2,:)+D{v}(2)*K{v}{2})*[Y1(it,in); Y2(it,in)] + h2*h1*(A{2}(2,:)+D{v}(2)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h2*h2*(A{2}(2,:)+D{v}(2)*K{v}{2})*[Y1(it,in); Y2(it,in)] ), [y1; y2], [Y1(it,6); Y2(it,6)]);
+            Y1(it+1, in) = Y1(it, in) + subs( t_sample * ( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*(h1*K{v}{1}*[y1tkv1; y2tkv1] +  h2*K{v}{2}*[y1tkv1; y2tkv1]) ), [y1; y2], [y1tkv1; y2tkv1]);
+            Y2(it+1, in) = Y2(it, in) + subs( t_sample * ( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*(h1*K{v}{1}*[y1tkv1; y2tkv1] +  h2*K{v}{2}*[y1tkv1; y2tkv1]) ), [y1; y2], [y1tkv1; y2tkv1]);
             
         else 
             v = 2;
-            Y1(it+1, in) = Y1(it, in) + subs( t_sample * ( Theta(1, 1)*yy1(it,in) + h1*h1*(A{1}(1,:)+D{v}(1)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h1*h2*(A{1}(1,:)+D{v}(1)*K{v}{2})*[Y1(it,in); Y2(it,in)] + h2*h1*(A{2}(1,:)+D{v}(1)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h2*h2*(A{2}(1,:)+D{v}(1)*K{v}{2})*[Y1(it,in); Y2(it,in)] ), [y1; y2], [Y1(it,6); Y2(it,16)]);
-            Y2(it+1, in) = Y2(it, in) + subs( t_sample * ( Theta(2, 2)*yy2(it,in) + h1*h1*(A{1}(2,:)+D{v}(2)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h1*h2*(A{1}(2,:)+D{v}(2)*K{v}{2})*[Y1(it,in); Y2(it,in)] + h2*h1*(A{2}(2,:)+D{v}(2)*K{v}{1})*[Y1(it,in); Y2(it,in)] + h2*h2*(A{2}(2,:)+D{v}(2)*K{v}{2})*[Y1(it,in); Y2(it,in)] ), [y1; y2], [Y1(it,6); Y2(it,16)]);
+            Y1(it+1, in) = Y1(it, in) + subs( t_sample * ( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*(h1*K{v}{1}*[y1tkv1; y2tkv1] +  h2*K{v}{2}*[y1tkv1; y2tkv1]) ), [y1; y2], [y1tkv1; y2tkv1]);
+            Y2(it+1, in) = Y2(it, in) + subs( t_sample * ( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*(h1*K{v}{1}*[y1tkv1; y2tkv1] +  h2*K{v}{2}*[y1tkv1; y2tkv1]) ), [y1; y2], [y1tkv1; y2tkv1]);
             
         end
         

@@ -19,8 +19,8 @@ Theta = [1, 0; 0, 1];
 A{1} = [1 - alpha^2, -1; 0.45,  -0.1];
 A{2} = [          1, -1; 0.45,  -0.1];
 
-D{1} = [1; 0];  % v = 1
-D{2} = [0; 2];  % v = 2
+D{1} = [1, 2; 0, 0];  % v = 1  原為 [1; 0]
+D{2} = [2, 3; 0, 0];  % v = 2  原為 [0; 2]
 % B{1} = [1; 0];   % v = 1
 % B{2} = [2; 0];   % v = 2
 
@@ -45,9 +45,9 @@ h_bar = 0.01;       % Maximum of h(t)
 
 %% SOS program & Variable declear
 g1 = 0.5;
-g2 = 0.3;
-rho{1} = 0.01;
-rho{2} = 0.02;
+g2 = 0.8;
+rho{1} = 0.1;
+rho{2} = 0.2;
 
 po = sosprogram([y; r1; rr; rrr]);
 
@@ -62,10 +62,10 @@ for i = 1: d
     end 
 end
 
-[po, KB{1}{1}] = sospolymatrixvar(po, monomials([y], [2]), [1 2]);  % First number is v, second is j
-[po, KB{1}{2}] = sospolymatrixvar(po, monomials([y], [2]), [1 2]);
-[po, KB{2}{1}] = sospolymatrixvar(po, monomials([y], [2]), [1 2]);
-[po, KB{2}{2}] = sospolymatrixvar(po, monomials([y], [2]), [1 2]);
+[po, KB{1}{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);  % First number is v, second is j
+[po, KB{1}{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
+[po, KB{2}{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
+[po, KB{2}{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
 
 [po, W1B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 [po, W2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
