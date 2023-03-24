@@ -36,7 +36,7 @@ x_0_b = 0.25;
 x_1_b = 0.75;
 Delta{1} = 0.5;
 Delta{2} = 0.5;
-x_sample = 1/20;    % 將空間切成30份
+x_sample = 1/15;    % 切
 zzz = (l1: x_sample: l2);  % Make the space interval. Different from before
 N = round((l2-l1) / x_sample) + 1;
 
@@ -46,12 +46,12 @@ h_bar = 0.01;       % Maximum of h(t)
 %% SOS program & Variable declear
 g1 = 0.5;
 g2 = 0.8;
-rho{1} = 0.1;
-rho{2} = 0.2;
+rho{1} = 0.0001;
+rho{2} = 0.0002;
 
 po = sosprogram([y; r1; rr; rrr]);
 
-[po, X]  = sospolymatrixvar(po, monomials([y], [1]), [2 2], 'symmetric');
+[po, X]  = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
 for i = 1: d
     for j = 1: d
         if (i == j)
@@ -62,23 +62,23 @@ for i = 1: d
     end 
 end
 
-[po, KB{1}{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);  % First number is v, second is j
-[po, KB{1}{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
-[po, KB{2}{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
-[po, KB{2}{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2]);
+[po, KB{1}{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);  % First number is v, second is j
+[po, KB{1}{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);
+[po, KB{2}{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);
+[po, KB{2}{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);
 
-[po, W1B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, W2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Q2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, W1B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, W2B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Q2B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
 
-[po, G] = sospolymatrixvar(po, monomials([y], [2]), [4 4], 'symmetric');
+[po, G] = sospolymatrixvar(po, monomials([y], [0]), [4 4], 'symmetric');
 G11 = G(1:2, 1:2);
 G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
 
 
 %% Condition
@@ -301,11 +301,12 @@ for j = 1:2
 end
 
 K11 = subs(K{1}{1}, [y1, y2], [1, 1]);
-K12 = subs(K{1}{1}, [y1, y2], [1, 1]);
-K21 = subs(K{1}{1}, [y1, y2], [1, 1]);
-K22 = subs(K{1}{1}, [y1, y2], [1, 1]);
+K12 = subs(K{1}{2}, [y1, y2], [1, 1]);
+K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
+K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
 save FHN_finish_calling_solver.mat
+toc
 
 %% Function
 function [a] = a(g) % g is the position   

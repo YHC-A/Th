@@ -4,7 +4,7 @@ tic
 
 l1 = 0;
 l2 = 1;
-x_sample = 1 / 20;
+x_sample = 1 / 15;
 zzz(1) = 0;
 
 alpha = 1; % alpha = 0.0001
