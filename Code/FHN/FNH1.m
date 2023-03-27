@@ -19,10 +19,10 @@ Theta = [1, 0; 0, 1];
 A{1} = [1 - alpha^2, -1; 0.45,  -0.1];
 A{2} = [          1, -1; 0.45,  -0.1];
 
-D{1} = [1, 2; 0, 0];  % v = 1  原為 [1; 0]
-D{2} = [2, 3; 0, 0];  % v = 2  原為 [0; 2]
-% B{1} = [1; 0];   % v = 1
-% B{2} = [2; 0];   % v = 2
+% D{1} = [1, 2; 1, 2];  % v = 1  
+% D{2} = [2, 3; 2, 3];  % v = 2  
+D{1} = [1, 1; 1, 1];  % v = 1  
+D{2} = [1, 1; 1, 1];  % v = 2 
 
 maxT1 = 1;
 minT3 = 0;
@@ -46,8 +46,10 @@ h_bar = 0.01;       % Maximum of h(t)
 %% SOS program & Variable declear
 g1 = 0.5;
 g2 = 0.8;
-rho{1} = 0.0001;
-rho{2} = 0.0002;
+% rho{1} = 0.000001;
+% rho{2} = 0.000002;
+rho{1} = 0.001;
+rho{2} = 0.002;
 
 po = sosprogram([y; r1; rr; rrr]);
 
@@ -84,7 +86,7 @@ G22 = G(3:4, 3:4);
 %% Condition
 rn = 1;
 % Positive defined matrix
-w{rn} = rr' * X * rr;
+w{rn} = rr' * (X) * rr;
 po = sosineq(po, w{rn});
 rn = rn + 1;
 w{rn} = rr' * W1B * rr;
@@ -173,7 +175,7 @@ rn = rn + 1;
 for i = 1: 2
     for j = 1: 2
         for v = 1:2
-            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v} - W2B;
+            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v};
             PI21 = Q2B + D{v}*KB{v}{j}*g1/Delta{v} - g2*X + g1*A{i}*X;
             PI22 = -2*g2*X;
             PI33 = -g2*Theta*X;
@@ -208,7 +210,7 @@ end
 for i = 1: 2
     for j = 1: 2
         for v = 1:2
-            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v} - W2B;
+            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v};
             PI21 = Q2B + D{v}*KB{v}{j}*g1/Delta{v} - g2*X + g1*A{i}*X;
             PI22 = -2*g2*X;
             PI33 = -g2*Theta*X;
@@ -243,7 +245,7 @@ end
 for i = 1: 2
     for j = 1: 2
         for v = 1:2
-            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v} - W2B;
+            PI11 = W1B + D(v)*KB{v}{j}*g2/Delta{v} + (D(v)*KB{v}{j}*g2/Delta{1})' + g2*A{i}*X + (g2*A{i}*X)' + rho{v}*Omega{v};
             PI21 = Q2B + D{v}*KB{v}{j}*g1/Delta{v} - g2*X + g1*A{i}*X;
             PI22 = -2*g2*X;
             PI33 = -g2*Theta*X;

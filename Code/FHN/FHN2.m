@@ -55,9 +55,9 @@ for it = 1: N_t-1
             y2tkv1 = Y2(it, xp1);
         end
         % Mechanism at v = 1
-        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
             fprintf("Does not pull the trigger at v2 (%d. %d). \n", it, in)
-        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
             fprintf("Pull the trigger at v2 (%d. %d). \n", it, in)
             y1tkv2 = Y1(it, xp2);
             y2tkv2 = Y2(it, xp2);
@@ -67,14 +67,21 @@ for it = 1: N_t-1
         h1 = alpha^(-2) * Y1(it, in)^2;
         h2 = 1 - h1;
         % Gain the double form
-        KF11 = double(subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]));
-        KF12 = double(subs(K{1}{2}, [y1, y2], [y1tkv1, y2tkv1]));
-        KF21 = double(subs(K{2}{1}, [y1, y2], [y1tkv2, y2tkv2]));
-        KF22 = double(subs(K{2}{2}, [y1, y2], [y1tkv2, y2tkv2]));    
+%         KF11 = double(subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]));
+%         KF12 = double(subs(K{1}{2}, [y1, y2], [y1tkv1, y2tkv1]));
+%         KF21 = double(subs(K{2}{1}, [y1, y2], [y1tkv2, y2tkv2]));
+%         KF22 = double(subs(K{2}{2}, [y1, y2], [y1tkv2, y2tkv2]));    
+%         
+%         u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
+%         u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
         
-        u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
-        u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
-                
+        KF11 = double(subs(K{1}{1}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
+        KF12 = double(subs(K{1}{2}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
+        KF21 = double(subs(K{2}{1}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));
+        KF22 = double(subs(K{2}{2}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));    
+        
+        u{1} = h1*KF11*[Y1(it, xp1); Y2(it, xp1)] + h2*KF12*[Y1(it, xp1); Y2(it, xp1)]; % u at v1
+        u{2} = h1*KF21*[Y1(it, xp1); Y2(it, xp1)] + h2*KF22*[Y1(it, xp1); Y2(it, xp1)];                
         
         % Euler
         if (in*x_sample <= 0.5)
@@ -99,8 +106,10 @@ for it = 1: N_t-1
     
 end % for it
 
+save FHN_.mat
+
 %% Figure
-figure(1)
+figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y1)
 view(-40+90, 30);
@@ -108,7 +117,7 @@ xlabel('x');
 ylabel('t');
 zlabel('y_1');
 
-figure(2)
+figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y2)
 view(-40+90, 30);
