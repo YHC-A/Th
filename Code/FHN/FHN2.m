@@ -1,6 +1,7 @@
 clc; clear; close all;
 tic
-load FHN_finish_calling_solver.mat
+% load FHN_finish_calling_solver.mat
+load test.mat
 
 %% Time & Space 
 t(1) = 0;

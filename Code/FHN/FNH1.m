@@ -69,18 +69,18 @@ end
 [po, KB{2}{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);
 [po, KB{2}{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2]);
 
-[po, W1B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
-[po, W2B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
-[po, Q2B] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, W1B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, W2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, Q2B] = sospolymatrixvar(po, monomials([y], [4]), [2 2], 'symmetric');
 
-[po, G] = sospolymatrixvar(po, monomials([y], [0]), [4 4], 'symmetric');
+[po, G] = sospolymatrixvar(po, monomials([y], [2]), [4 4], 'symmetric');
 G11 = G(1:2, 1:2);
 G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 
 
 %% Condition
