@@ -6,7 +6,7 @@ load test.mat
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
-tf   = 15;
+tf   = 12;
 t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
@@ -32,10 +32,10 @@ u2  = zeros(N_t, 1);
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.5;
-    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 4;
+    Y2(1,i)  = -0.1 * cos(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) =  0.1 * pi^2 * cos(pi*zzz(i));
 end
 
 % The selected states for controller 
@@ -68,21 +68,21 @@ for it = 1: N_t-1
         h1 = alpha^(-2) * Y1(it, in)^2;
         h2 = 1 - h1;
         % Gain the double form
-%         KF11 = double(subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]));
-%         KF12 = double(subs(K{1}{2}, [y1, y2], [y1tkv1, y2tkv1]));
-%         KF21 = double(subs(K{2}{1}, [y1, y2], [y1tkv2, y2tkv2]));
-%         KF22 = double(subs(K{2}{2}, [y1, y2], [y1tkv2, y2tkv2]));    
+        KF11 = double(subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]));
+        KF12 = double(subs(K{1}{2}, [y1, y2], [y1tkv1, y2tkv1]));
+        KF21 = double(subs(K{2}{1}, [y1, y2], [y1tkv2, y2tkv2]));
+        KF22 = double(subs(K{2}{2}, [y1, y2], [y1tkv2, y2tkv2]));    
+        
+        u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
+        u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
+        
+%         KF11 = double(subs(K{1}{1}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
+%         KF12 = double(subs(K{1}{2}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
+%         KF21 = double(subs(K{2}{1}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));
+%         KF22 = double(subs(K{2}{2}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));    
 %         
-%         u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
-%         u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
-        
-        KF11 = double(subs(K{1}{1}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
-        KF12 = double(subs(K{1}{2}, [y1, y2], [Y1(it, xp1), Y2(it, xp1)]));
-        KF21 = double(subs(K{2}{1}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));
-        KF22 = double(subs(K{2}{2}, [y1, y2], [Y1(it, xp2), Y2(it, xp2)]));    
-        
-        u{1} = h1*KF11*[Y1(it, xp1); Y2(it, xp1)] + h2*KF12*[Y1(it, xp1); Y2(it, xp1)]; % u at v1
-        u{2} = h1*KF21*[Y1(it, xp1); Y2(it, xp1)] + h2*KF22*[Y1(it, xp1); Y2(it, xp1)];                
+%         u{1} = h1*KF11*[Y1(it, xp1); Y2(it, xp1)] + h2*KF12*[Y1(it, xp1); Y2(it, xp1)]; % u at v1
+%         u{2} = h1*KF21*[Y1(it, xp1); Y2(it, xp1)] + h2*KF22*[Y1(it, xp1); Y2(it, xp1)];                
         
         % Euler
         if (in*x_sample <= 0.5)

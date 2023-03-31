@@ -1,5 +1,5 @@
 clc; clear; close all;
-tic
+tic; echo on
 
 %% Syms
 syms y [1 2] real
@@ -12,15 +12,15 @@ rr = rr';
 rrr = rrr';
 
 %% System & Parameter
-alpha = 1.5;
+alpha = 5;
 d = 2;
 Theta = [1, 0; 0, 1];
 
 A{1} = [1 - alpha^2, -1; 0.45,  -0.1];
 A{2} = [          1, -1; 0.45,  -0.1];
 
-D{1} = [1, 2; 1, 2];  % v = 1  
-D{2} = [2, 3; 2, 3];  % v = 2  
+D{1} = [1, 2; 1, 1];  % v = 1  
+D{2} = [2, 3; 1, 1];  % v = 2  
 % D{1} = [1, 1; 1, 1];  % v = 1  
 % D{2} = [1, 1; 1, 1];  % v = 2 
 
@@ -71,16 +71,16 @@ end
 
 [po, W1B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 [po, W2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Q2B] = sospolymatrixvar(po, monomials([y], [4]), [2 2], 'symmetric');
+[po, Q2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 
-[po, G] = sospolymatrixvar(po, monomials([y], [2]), [4 4], 'symmetric');
+[po, G] = sospolymatrixvar(po, monomials([y], [0]), [4 4], 'symmetric');
 G11 = G(1:2, 1:2);
 G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
 
 
 %% Condition
@@ -308,7 +308,7 @@ K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
 save FHN_finish_calling_solver.mat
-toc
+toc; echo off;
 
 %% Function
 function [a] = a(g) % g is the position   
