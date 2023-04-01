@@ -12,7 +12,7 @@ rr = rr';
 rrr = rrr';
 
 %% System & Parameter
-alpha = 5;
+alpha = 2.5;
 d = 2;
 Theta = [1, 0; 0, 1];
 
