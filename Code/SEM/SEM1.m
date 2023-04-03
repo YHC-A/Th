@@ -71,16 +71,16 @@ end
 
 [po, W1B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 [po, W2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Q2B] = sospolymatrixvar(po, monomials([y], [4]), [2 2], 'symmetric');
+[po, Q2B] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
 
-[po, G] = sospolymatrixvar(po, monomials([y], [2]), [4 4], 'symmetric');
+[po, G] = sospolymatrixvar(po, monomials([y], [0]), [4 4], 'symmetric');
 G11 = G(1:2, 1:2);
 G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [2]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
 
 
 %% Condition
@@ -307,7 +307,7 @@ K12 = subs(K{1}{2}, [y1, y2], [1, 1]);
 K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
-save FHN_finish_calling_solver.mat
+save SEM_finish_calling_solver.mat
 toc
 
 %% Function

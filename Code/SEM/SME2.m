@@ -1,6 +1,6 @@
 clc; clear; close all;
 tic
-% load FHN_finish_calling_solver.mat
+% load SEM_finish_calling_solver.mat
 load test.mat
 
 %% Time & Space 
@@ -87,13 +87,13 @@ for it = 1: N_t-1
         % Euler
         if (in*x_sample <= 0.5)
             v = 1;
-            Y1(it+1, in) = Y1(it, in) + t_sample * ( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*u{v} );
-            Y2(it+1, in) = Y2(it, in) + t_sample * ( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*u{v} );
+            Y1(it+1, in) = Y1(it, in) + t_sample * subs( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*u{v}, [y1; y2], [Y1(it,in); Y2(it,in)]  );
+            Y2(it+1, in) = Y2(it, in) + t_sample * subs( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*u{v}, [y1; y2], [Y1(it,in); Y2(it,in)]  );
             
         else 
             v = 2;
-            Y1(it+1, in) = Y1(it, in) + t_sample * ( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*u{v} );
-            Y2(it+1, in) = Y2(it, in) + t_sample * ( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*u{v} );
+            Y1(it+1, in) = Y1(it, in) + t_sample * subs( Theta(1, 1)*yy1(it,in) + h1*A{1}(1,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(1,:)*[Y1(it,in); Y2(it,in)] + D{v}(1,:)*u{v}, [y1; y2], [Y1(it,in); Y2(it,in)]  );
+            Y2(it+1, in) = Y2(it, in) + t_sample * subs( Theta(2, 2)*yy2(it,in) + h1*A{1}(2,:)*[Y1(it,in); Y2(it,in)] + h2*A{2}(2,:)*[Y1(it,in); Y2(it,in)] + D{v}(2,:)*u{v}, [y1; y2], [Y1(it,in); Y2(it,in)]  );
             
         end
         

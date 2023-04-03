@@ -32,10 +32,10 @@ u2  = zeros(N_t, 1);
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
-    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.5;
+    Y2(1,i)  =  0.5 * cos(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
 end
 
 % The selected states for controller 
