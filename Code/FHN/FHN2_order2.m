@@ -5,7 +5,7 @@ load FHN_finish_calling_solver_order2.mat
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
-tf   = 40;
+tf   = 80;
 t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
@@ -43,21 +43,28 @@ y2tkv1 = Y2(1,xp1);
 y1tkv2 = Y1(1,xp2);
 y2tkv2 = Y2(1,xp2);
 
+% =================== Test ==================
+K{1}{1} = subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]);
+K{1}{2} = subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]);
+K{2}{1} = subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]);
+K{2}{2} = subs(K{1}{1}, [y1, y2], [y1tkv1, y2tkv1]);
+% ===========================================
+
 %% Dynamic 
 for it = 1: N_t-1
     for in = 1: N
         % Mechanism at v = 0
-        if ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] < rho{1} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
+        if ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] < rho{v} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
             fprintf("Does not pull the trigger at v1 (%d. %d). \n", it, in)
-        elseif ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] >= rho{1} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
+        elseif ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] >= rho{v} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
             fprintf("Pull the trigger at v1 (%d. %d). \n", it, in)
             y1tkv1 = Y1(it, xp1);
             y2tkv1 = Y2(it, xp1);
         end
         % Mechanism at v = 1
-        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho{v} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
             fprintf("Does not pull the trigger at v2 (%d. %d). \n", it, in)
-        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho{1} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho{v} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
             fprintf("Pull the trigger at v2 (%d. %d). \n", it, in)
             y1tkv2 = Y1(it, xp2);
             y2tkv2 = Y2(it, xp2);

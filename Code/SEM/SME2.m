@@ -6,8 +6,8 @@ load test.mat
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
-tf   = 12;
-t_sample = 0.00125;
+tf   = 15;
+t_sample = 0.002;  % The last one: 0.00125
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
 
@@ -33,9 +33,9 @@ u2  = zeros(N_t, 1);
 %% Initial condition
 for i = 1: N
     Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
-    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    Y2(1,i)  =  0.9 * cos(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.9 * pi^2 * cos(pi*zzz(i));
 end
 
 % The selected states for controller 
@@ -107,7 +107,7 @@ for it = 1: N_t-1
     
 end % for it
 
-save FHN_.mat
+save SEM_.mat
 
 %% Figure
 figure
