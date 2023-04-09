@@ -16,8 +16,8 @@ alpha = 1.5;
 d = 2;
 Theta = [1, 0; 0, 1];
 
-A{1} = [1 - y1^2, -0.5; 1 - 0.1489*y1^2, -0.1];
-A{2} = [1 - y1^2, -0.5; 1 - 0.1667*y1^2, -0.1];
+A{1} = [1 - y1^2, 0.5; 1 - 0.1489*y1^2, -0.1];
+A{2} = [1 - y1^2, 0.5; 1 - 0.1667*y1^2, -0.1];
 
 D{1} = [1, 2; 1, 2];  % v = 1  
 D{2} = [2, 3; 2, 3];  % v = 2  
@@ -86,7 +86,7 @@ G22 = G(3:4, 3:4);
 %% Condition
 rn = 1;
 % Positive defined matrix
-w{rn} = rr' * (X) * rr;
+w{rn} = rr' * (0.005*eye(2) - X) * rr;
 po = sosineq(po, w{rn});
 rn = rn + 1;
 w{rn} = rr' * W1B * rr;
@@ -308,6 +308,7 @@ K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
 save SEM_finish_calling_solver.mat
+run SME2.m
 toc
 
 %% Function

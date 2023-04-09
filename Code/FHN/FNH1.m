@@ -30,13 +30,13 @@ I = eye(2);
 I0 = zeros(2);
 
 % Space
-l1 = 0;             % x空間的下限
-l2 = 1;             % x空間的上限
+l1 = 0;             % x lowewr
+l2 = 1;             % x upper
 x_0_b = 0.25;
 x_1_b = 0.75;
 Delta{1} = 0.5;
 Delta{2} = 0.5;
-x_sample = 1/15;    % 切
+x_sample = 1/15;    % segment
 zzz = (l1: x_sample: l2);  % Make the space interval. Different from before
 N = round((l2-l1) / x_sample) + 1;
 
@@ -260,12 +260,12 @@ for i = 1: 2
             PI72 = g1*KB{v}{j}'*D{v}'/Delta{v};
             PI77 = -(pi^2) * g2 / (4*(Delta{v}^2)) * Theta * X + rho{v}*Omega{v};
 
-            PII = [PI11, PI21',  I0, PI41', PI61', PI71'; ...
-                  PI21, PI22 ,   I0,   I0 , PI62', PI72'; ...
-                    I0,   I0 , PI33,   I0 ,   I0 ,   I0 ; ...
-                  PI41,   I0 ,   I0, PI44 ,   I0 ,   I0 ; ... ...
-                  PI61, PI62 ,   I0,   I0 , PI66 ,   I0 ; ...
-                  PI71, PI72 ,   I0,   I0 ,   I0 , PI77];
+            PII = [PI11, PI21',   I0, PI41', PI61', PI71'; ...
+                   PI21, PI22 ,   I0,   I0 , PI62', PI72'; ...
+                     I0,   I0 , PI33,   I0 ,   I0 ,   I0 ; ...
+                   PI41,   I0 ,   I0, PI44 ,   I0 ,   I0 ; ...
+                   PI61, PI62 ,   I0,   I0 , PI66 ,   I0 ; ...
+                   PI71, PI72 ,   I0,   I0 ,   I0 , PI77];
   
             w{rn} = -rrr' * PII * rrr;
             po = sosineq(po, w{rn});

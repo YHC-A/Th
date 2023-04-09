@@ -16,7 +16,7 @@ end
 
 t0 = 0;
 tf = 20;
-t_sample = 0.001; % Normal: 0.001 sec. Max test: 0.00125 
+t_sample = 0.00125; % Normal: 0.001 sec. Max test: 0.00125 
 
 N_t = round((tf-t0) / t_sample) + 1;
 ttt = ((1:N_t)-1) * t_sample;
@@ -36,17 +36,17 @@ yy2 = repmat(yy2, N, 1);
 
 
 
+%% Initial condition
 for i = 1: N
-    % Initial condition
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.6;
-    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
+    Y2(1,i)  =  0.4 * sin(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.4 * pi^2 * sin(pi*zzz(i));
 end
 
 for it = 1: (N_t-1)
     for i = 1: N
-        Y1(it+1, i) = Y1(it,i) + t_sample * (alpha*yy1(it,i) + Y1(it,i) - 0.5*Y2(it,i) - (Y1(it,i)^3));
+        Y1(it+1, i) = Y1(it,i) + t_sample * (alpha*yy1(it,i) + Y1(it,i) + 0.5*Y2(it,i) - (Y1(it,i)^3));
         Y2(it+1, i) = Y2(it,i) + t_sample * (alpha*yy2(it,i) + sin(Y1(it,i)) - 0.1*Y2(it,i));        
     end 
     
