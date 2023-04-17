@@ -36,7 +36,7 @@ x_0_b = 0.25;
 x_1_b = 0.75;
 Delta{1} = 0.5;
 Delta{2} = 0.5;
-x_sample = 1/15;    % 切
+x_sample = 1/16;    % 切
 zzz = (l1: x_sample: l2);  % Make the space interval. Different from before
 N = round((l2-l1) / x_sample) + 1;
 
@@ -307,9 +307,7 @@ K12 = subs(K{1}{2}, [y1, y2], [1, 1]);
 K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
-save b666.mat
-run SME2.m
-% save SEM_finish_calling_solver.mat
+save SEM_finish_calling_solver.mat
 toc
 
 %% Function

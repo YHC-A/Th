@@ -1,20 +1,21 @@
 clc; clear; close all;
-tic; echo off
-load SEM_finish_calling_solver.mat
+tic
+% load SEM_finish_calling_solver.mat
 % load test.mat
+load t4545.mat
 
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
 tf   = 15;
-t_sample = 0.002;
+t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
 
 l1 = 0;
 l2 = 1;
-xp1 = 4;
-xp2 = 12;
+xp1 = 5;
+xp2 = 15;
 x_sample = 1 / 15;
 zzz(1) = 0;
 
@@ -32,10 +33,10 @@ u2  = zeros(N_t, 1);
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
-    Y2(1,i)  =  0.4 * sin(pi*zzz(i));
-    yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.4 * pi^2 * sin(pi*zzz(i));
+    Y1(1,i)  =  0.5 * sin(pi*zzz(i)) + 0.2;
+    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    yy1(1,i) = -0.5 * pi^2 * sin(pi*zzz(i));
+    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
 end
 
 % The selected states for controller 
@@ -107,7 +108,7 @@ for it = 1: N_t-1
     
 end % for it
 
-save SEM_.mat
+save SME_.mat
 
 %% Figure
 figure

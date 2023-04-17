@@ -86,7 +86,7 @@ G22 = G(3:4, 3:4);
 %% Condition
 rn = 1;
 % Positive defined matrix
-w{rn} = rr' * (0.005*eye(2) - X) * rr;
+w{rn} = rr' * (X) * rr;
 po = sosineq(po, w{rn});
 rn = rn + 1;
 w{rn} = rr' * W1B * rr;
@@ -308,7 +308,6 @@ K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
 save SEM_finish_calling_solver.mat
-run SME2.m
 toc
 
 %% Function

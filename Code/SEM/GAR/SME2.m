@@ -1,7 +1,7 @@
 clc; clear; close all;
 tic
-% load SEM_finish_calling_solver.mat
-load b666.mat
+load SEM_finish_calling_solver.mat
+% load test.mat
 
 %% Time & Space 
 t(1) = 0;
@@ -13,8 +13,8 @@ ttt = t0: t_sample: tf;
 
 l1 = 0;
 l2 = 1;
-xp1 = 6;
-xp2 = 16;
+xp1 = 5;
+xp2 = 13;
 x_sample = 1 / 15;
 zzz(1) = 0;
 
@@ -33,9 +33,9 @@ u2  = zeros(N_t, 1);
 %% Initial condition
 for i = 1: N
     Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
-    Y2(1,i)  =  0.1 * cos(pi*zzz(i));
+    Y2(1,i)  =  0.4 * sin(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.1 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.4 * pi^2 * sin(pi*zzz(i));
 end
 
 % The selected states for controller 
