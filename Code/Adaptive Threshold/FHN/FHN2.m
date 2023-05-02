@@ -1,7 +1,9 @@
 clc; clear; close all;
 tic; echo off;
-load FHN_finish_calling_solver.mat
+% load FHN_finish_calling_solver.mat
 % load test.mat
+load ada0501_2.mat
+
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
@@ -12,8 +14,8 @@ ttt = t0: t_sample: tf;
 
 l1 = 0;
 l2 = 1;
-xp1 = 6;
-xp2 = 16;
+xp1 = 5;
+xp2 = 13;
 x_sample = 1 / 20;
 zzz(1) = 0;
 
@@ -31,16 +33,16 @@ u2  = zeros(N_t, 1);
 rhos1 = zeros(N_t, 1);
 rhos2 = zeros(N_t, 1);
 rho1 = zeros(N_t, 1);
-rho1(1) = 0.0000001;
+rho1(1) = 0.00001;
 rho2 = zeros(N_t, 1);
-rho2(1) = 0.0000002;
-rc = 0.005;
+rho2(1) = 0.00002;
+rc = 1;
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * sin(pi*zzz(i)) + 0.5;
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) - 0.4;
     Y2(1,i)  = -0.3 * cos(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
-    yy1(1,i) = -0.5 * pi^2 * sin(pi*zzz(i));
+    yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
     yy2(1,i) =  0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
 end
 
@@ -54,43 +56,47 @@ y2tkv2 = Y2(1,xp2);
 for it = 1: N_t-1
     for in = 1: N
         % Mechanism at v = 0
-        if ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] < rho{1} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
-            fprintf("Does not pull the trigger at v1 (%d. %d). \n", it, in)
-            rho1(it) = rho1(it - 1);
-        elseif ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] >= rho{1} *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
-            fprintf("Pull the trigger at v1 (%d. %d). \n", it, in)
-            
-            if( rho1(it) >= rho{1} )
-                rho1(it) = rho{1};
-            end
-            if ( norm([y1tkv2; y2tkv2]) <= norm([Y1(it,in); Y2(it,in)]) )
-                rho1(it) = rho1(1);
+        if( rho1(it) >= rho{1} )
+            % Over the upper bound
+            rho1(it) = rho{1};
+        else
+            if ( norm([y1tkv1; y2tkv1]) <= norm([Y1(it,xp1); Y2(it,xp1)]) )
+                % Lower bound
+                rho1(it) = 0.0001;
             else
-                nl = tanh( (norm([Y1(it,in); Y2(it,in)]) - norm([y1tkv2; y2tkv2])) /  norm([Y1(it,in); Y2(it,in)]) );
+                % State converge => threshold increasing
+                nl = tanh( (norm([Y1(it,xp1); Y2(it,xp1)]) - norm([y1tkv1; y2tkv1])) /  norm([Y1(it,xp1); Y2(it,xp1)]) );
                 rho1(it) = (1 - rc*nl)*rho1(it-1);
             end
-            
+        end               
+        
+        if ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] < rho1(it) *[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
+            fprintf("Threshold : %d. Does not pull the trigger at v1 (%d. %d). \n", rho1(it), it, in)
+        elseif ( (it>=2) && (in == xp1) && ([y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [y1tkv1-Y1(it, xp1); y2tkv1-Y2(it, xp1)] >= rho1(it)*[Y1(it, xp1); Y2(it, xp1)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp1); Y2(it, xp1)]) *  [Y1(it, xp1); Y2(it, xp1)]))
+            fprintf("Threshold : %d. Pull the trigger at v1 (%d. %d). \n", rho1(it), it, in)
             y1tkv1 = Y1(it, xp1);
             y2tkv1 = Y2(it, xp1);
             rhos1(it) = 1;
         end
         % Mechanism at v = 1
-        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho{2} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
-            fprintf("Does not pull the trigger at v2 (%d. %d). \n", it, in)
-            rho2(it) = rho2(it - 1);
-        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho{2} *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
-            fprintf("Pull the trigger at v2 (%d. %d). \n", it, in)
-            
-            if( rho2(it) >= rho{2} )
-                rho1(it) = rho{2};
-            end
-            if ( norm([y1tkv2; y2tkv2]) <= norm([Y1(it,in); Y2(it,in)]) )
-                rho2(it) = rho2(1);
+        if( rho2(it) >= rho{2} )
+            % Over the upper bound
+            rho2(it) = rho{2};
+        else
+            if ( norm([y1tkv2; y2tkv2]) <= norm([Y1(it,xp2); Y2(it,xp2)]) )
+                % Lower bound
+                rho2(it) = 0.0002;
             else
-                nl = tanh( (norm([Y1(it,in); Y2(it,in)]) - norm([y1tkv2; y2tkv2])) /  norm([Y1(it,in); Y2(it,in)]) );
+                % State converge => threshold increasing
+                nl = tanh( (norm([Y1(it,xp2); Y2(it,xp2)]) - norm([y1tkv2; y2tkv2])) /  norm([Y1(it,xp2); Y2(it,xp2)]) );
                 rho2(it) = (1 - rc*nl)*rho2(it-1);
             end
-            
+        end
+        
+        if ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] < rho2(it) *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+            fprintf("Threshold : %d. Does not pull the trigger at v2 (%d. %d). \n", rho2(it), it, in)
+        elseif ( (it>=2) && (in == xp2) && ([y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [y1tkv2-Y1(it, xp2); y2tkv2-Y2(it, xp2)] >= rho2(it) *[Y1(it, xp2); Y2(it, xp2)]' * subs(Omega{v}, [y1; y2], [Y1(it, xp2); Y2(it, xp2)]) *  [Y1(it, xp2); Y2(it, xp2)]))
+            fprintf("Threshold : %d. Pull the trigger at v2 (%d. %d). \n", rho2(it), it, in)
             y1tkv2 = Y1(it, xp2);
             y2tkv2 = Y2(it, xp2);
             rhos2(it) = 1;
