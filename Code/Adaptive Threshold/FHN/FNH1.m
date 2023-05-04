@@ -19,10 +19,10 @@ Theta = [1, 0; 0, 1];
 A{1} = [1 - alpha^2, -1; 0.45,  -0.1];
 A{2} = [          1, -1; 0.45,  -0.1];
 
+% D{1} = [1, 2; 1, 1];  % v = 1  
+% D{2} = [2, 3; 1, 1];  % v = 2  
 D{1} = [1, 2; 1, 1];  % v = 1  
-D{2} = [2, 3; 1, 1];  % v = 2  
-% D{1} = [1, 1; 1, 1];  % v = 1  
-% D{2} = [1, 1; 1, 1];  % v = 2 
+D{2} = [1, 1; 1, 2];  % v = 2 
 
 maxT1 = 1;
 minT3 = 0;
@@ -79,8 +79,8 @@ G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0 1]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0 1]), [2 2], 'symmetric');
 
 
 %% Condition
