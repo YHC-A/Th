@@ -1,13 +1,13 @@
 clc; clear; close all;
 tic; echo off;
-% load FHN_finish_calling_solver.mat
+load FHN_finish_calling_solver.mat
 % load test.mat
-load ada0503_4.mat
+% load ada0503_4.mat
 
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
-tf   = 15;
+tf   = 20;
 t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;

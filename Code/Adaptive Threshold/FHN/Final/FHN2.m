@@ -1,8 +1,8 @@
 clc; clear; close all;
 tic; echo off;
-% load FHN_finish_calling_solver.mat
+load FHN_finish_calling_solver.mat
 % load test.mat
-load ada0501_2.mat
+% load ada0503_4.mat
 
 %% Time & Space 
 t(1) = 0;
@@ -16,7 +16,6 @@ l1 = 0;
 l2 = 1;
 xp1 = 5;
 xp2 = 13;
-x_sample = 1 / 20;
 zzz(1) = 0;
 
 Y1(1,1)  = 0;
@@ -28,22 +27,22 @@ Y1  = repmat(Y1, N_t, 1);
 Y2  = repmat(Y2, N_t, 1);
 yy1 = repmat(yy1, N, 1);
 yy2 = repmat(yy2, N, 1);
-u1  = zeros(N_t, 1);
-u2  = zeros(N_t, 1);
+u1  = zeros(N_t, 2);
+u2  = zeros(N_t, 2);
 rhos1 = zeros(N_t, 1);
 rhos2 = zeros(N_t, 1);
 rho1 = zeros(N_t, 1);
-rho1(1) = 0.00001;
+rho1(1) = 0.01;
 rho2 = zeros(N_t, 1);
-rho2(1) = 0.00002;
-rc = 1;
+rho2(1) = 0.02;
+rc = 0.05;
 
 %% Initial condition
 for i = 1: N
     Y1(1,i)  =  0.5 * cos(pi*zzz(i)) - 0.4;
     Y2(1,i)  = -0.3 * cos(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
-    yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) =  0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
+    yy1(1,i) =  0.5 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
 end
 
 % The selected states for controller 
@@ -62,7 +61,7 @@ for it = 1: N_t-1
         else
             if ( norm([y1tkv1; y2tkv1]) <= norm([Y1(it,xp1); Y2(it,xp1)]) )
                 % Lower bound
-                rho1(it) = 0.0001;
+                rho1(it) = rho1(1);
             else
                 % State converge => threshold increasing
                 nl = tanh( (norm([Y1(it,xp1); Y2(it,xp1)]) - norm([y1tkv1; y2tkv1])) /  norm([Y1(it,xp1); Y2(it,xp1)]) );
@@ -85,7 +84,7 @@ for it = 1: N_t-1
         else
             if ( norm([y1tkv2; y2tkv2]) <= norm([Y1(it,xp2); Y2(it,xp2)]) )
                 % Lower bound
-                rho2(it) = 0.0002;
+                rho2(it) = rho2(1);
             else
                 % State converge => threshold increasing
                 nl = tanh( (norm([Y1(it,xp2); Y2(it,xp2)]) - norm([y1tkv2; y2tkv2])) /  norm([Y1(it,xp2); Y2(it,xp2)]) );
@@ -113,7 +112,8 @@ for it = 1: N_t-1
         
         u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
         u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
-                
+        u1(it, :) = u{1};
+        u2(it, :) = u{2};
         
         % Euler
         if (in*x_sample <= 0.5)
@@ -154,6 +154,29 @@ view(-40+90, 30);
 xlabel('x');
 ylabel('t');
 zlabel('y_2');
+
+figure
+plot(ttt, rho1); hold on
+plot(ttt, rho2);
+legend("rho v1", "rho v2")
+
+figure
+plot(ttt, u1(:,1)); hold on;
+plot(ttt, u1(:,2));
+plot(ttt, u2(:,1)); 
+plot(ttt, u2(:,2));
+legend("u11", "u12", "u21", "u21");
+
+% figure
+% for it = 1: N_t-1
+%     if (rhos1(it) == 1)
+%         c = c+1;
+%         plot(it, 1, "c."); hold on;
+%     end
+% end
+
+
+
 
 % figure
 % set(gcf, 'Renderer', 'ZBuffer');

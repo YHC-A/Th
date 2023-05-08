@@ -19,10 +19,10 @@ Theta = [1, 0; 0, 1];
 A{1} = [1 - alpha^2, -1; 0.45,  -0.1];
 A{2} = [          1, -1; 0.45,  -0.1];
 
-D{1} = [1, 2; 1, 1];  % v = 1  
-D{2} = [2, 3; 1, 1];  % v = 2  
-% D{1} = [1, 1; 1, 1];  % v = 1  
-% D{2} = [1, 1; 1, 1];  % v = 2 
+% D{1} = [1, 2; 1, 1];  % v = 1  
+% D{2} = [2, 3; 1, 1];  % v = 2  
+D{1} = [1, 1; 0, 0];  % v = 1  
+D{2} = [1, 2; 0, 0];  % v = 2 
 
 maxT1 = 1;
 minT3 = 0;
@@ -46,8 +46,8 @@ h_bar = 0.01;       % Maximum of h(t)
 %% SOS program & Variable declear
 g1 = 0.5;
 g2 = 0.8;
-rho{1} = 0.001;
-rho{2} = 0.002;
+rho{1} = 0.1;
+rho{2} = 0.2;
 % rho{1} = 0.001;
 % rho{2} = 0.002;
 
@@ -79,8 +79,8 @@ G12 = G(1:2, 3:4);
 G21 = G(3:4, 1:2);
 G22 = G(3:4, 3:4);
 
-[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
-[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+[po, Omega{1}] = sospolymatrixvar(po, monomials([y], [0 1]), [2 2], 'symmetric');
+[po, Omega{2}] = sospolymatrixvar(po, monomials([y], [0 1]), [2 2], 'symmetric');
 
 
 %% Condition
@@ -101,7 +101,7 @@ rn = rn + 1;
 w{rn} = rr' * (0.001*I - Omega{1}) * rr;
 po = sosineq(po, w{rn});
 rn = rn + 1;
-w{rn} = rr' *(0.001*I - Omega{2})  * rr;
+w{rn} = rr' * (0.001*I - Omega{2})  * rr;
 po = sosineq(po, w{rn});
 rn = rn + 1;
 
