@@ -1,8 +1,8 @@
 clc; clear; close all;
 tic; echo off;
 % load SEM_finish_calling_solver.mat
-load test.mat
-% load test1.mat
+% load test.mat
+load test2.mat
 % load t4545.mat
 
 %% Time & Space 
@@ -35,8 +35,8 @@ rhos2 = zeros(N_t, 1);
 rho1 = zeros(N_t, 1);
 rho1(1) = 0.001;
 rho2 = zeros(N_t, 1);
-rho2(1) = 0.001;
-rc = 0.095;
+rho2(1) = 0.002;
+rc = 0.198;
 
 %% Initial condition
 for i = 1: N
@@ -159,13 +159,15 @@ ylabel('t');
 zlabel('y_2');
 
 figure
+plot(ttt, u1(:,1), ttt, u1(:,2), ttt, u2(:,1), ttt, u2(:,2)); hold on;
+legend("u11", "u12", "u21", "u22");
+figure
+
 plot(ttt, rho1); hold on
 plot(ttt, rho2);
 legend("rho v1", "rho v2")
 
-figure
-plot(ttt, u1(:,1), ttt, u1(:,2), ttt, u2(:,1), ttt, u2(:,2)); hold on;
-legend("u11", "u12", "u21", "u22");
+
 
 
 

@@ -165,7 +165,7 @@ plot(ttt, u1(:,1)); hold on;
 plot(ttt, u1(:,2));
 plot(ttt, u2(:,1)); 
 plot(ttt, u2(:,2));
-legend("u11", "u12", "u21", "u21");
+legend("u11", "u12", "u21", "u22");
 
 % figure
 % for it = 1: N_t-1
