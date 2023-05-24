@@ -21,8 +21,8 @@ A{2} = [1 - y1^2, 0.5; 1 - 0.1667*y1^2, -0.1];
 
 % D{1} = [1, 2; 1, 2];  % v = 1  
 % D{2} = [2, 3; 2, 3];  % v = 2  
-D{1} = [1, 1; 1.5, 1.5];  % v = 1  
-D{2} = [1, 1; 1.5, 1.5];  % v = 2 
+D{1} = [1, 1; 1, 1];  % v = 1  
+D{2} = [1, 1.5; 1, 1];  % v = 2 
 
 maxT1 = -0.1489;
 minT3 = -0.1667;
@@ -54,6 +54,9 @@ rho{2} = 0.2;
 po = sosprogram([y; r1; rr; rrr]);
 
 [po, X]  = sospolymatrixvar(po, monomials([y], [0]), [2 2], 'symmetric');
+% [po, X1]  = sospolymatrixvar(po, monomials([y1], [2]), [1 1]);
+% [po, X2]  = sospolymatrixvar(po, monomials([y2], [2]), [1 1]);
+% X = [X1, 0; 0, X2];
 for i = 1: d
     for j = 1: d
         if (i == j)
@@ -296,7 +299,7 @@ Omega{2} = sosgetsol(po, Omega{2});
 
 
 for j = 1:2
-    for v = 1: 2
+    for v = 1:2
         K{v}{j} = KB{v}{j} * inv(X);
         K{v}{j} = KB{v}{j} * inv(X);
     end
@@ -307,7 +310,7 @@ K12 = subs(K{1}{2}, [y1, y2], [1, 1]);
 K21 = subs(K{2}{1}, [y1, y2], [1, 1]);
 K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
-save test1.mat
+save test3.mat
 toc; echo on;
 run SEM2.m 
 
