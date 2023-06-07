@@ -1,14 +1,14 @@
 clc; clear; close all;
 tic; echo off;
 % load SEM_finish_calling_solver.mat
-load test.mat
-% load test3.mat
-% load t4545.mat
+% load test1.mat
+load test3.mat
+% load ada0503_4.mat
 
 %% Time & Space 
 t(1) = 0;
 t0   = 0;    
-tf   = 20;
+tf   = 30;
 t_sample = 0.00125;
 N_t = round((tf-t0) / t_sample) + 1;  % total step
 ttt = t0: t_sample: tf;
@@ -33,21 +33,17 @@ u2  = zeros(N_t, 2);
 rhos1 = zeros(N_t, 1);
 rhos2 = zeros(N_t, 1);
 rho1 = zeros(N_t, 1);
-rho1(1) = 0.01;
+rho1(1) = 0.001;
 rho2 = zeros(N_t, 1);
-rho2(1) = 0.02;
+rho2(1) = 0.002;
 rc = 0.099;
 
 %% Initial condition
 for i = 1: N
-%     Y1(1,i)  = -0.5 * cos(pi*zzz(i)) + 0.2;
-%     Y2(1,i)  =  0.4 * cos(pi*zzz(i));
-%     yy1(1,i) =  0.5 * pi^2 * cos(pi*zzz(i));
-%     yy2(1,i) = -0.4 * pi^2 * cos(pi*zzz(i));
-    Y1(1,i)  = -0.5 * sin(pi*zzz(i));
-    Y2(1,i)  =  0.4 * cos(pi*zzz(i)) - 0.4;
-    yy1(1,i) =  0.5 * pi^2 * sin(pi*zzz(i));
-    yy2(1,i) = -0.4 * pi^2 * cos(pi*zzz(i));
+    Y1(1,i)  =  0.7 * cos(pi*zzz(i)) + 0.4;
+    Y2(1,i)  = -0.3 * sin(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
+    yy1(1,i) =  0.7 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.3 * pi^2 * sin(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
 end
 
 % The selected states for controller 
@@ -118,7 +114,7 @@ for it = 1: N_t-1
         u{1} = h1*KF11*[y1tkv1; y2tkv1] + h2*KF12*[y1tkv1; y2tkv1]; % u at v1
         u{2} = h1*KF21*[y1tkv2; y2tkv2] + h2*KF22*[y1tkv2; y2tkv2];
         u1(it, :) = u{1};
-        u2(it, :) = u{2};       
+        u2(it, :) = u{2};
         
         % Euler
         if (in*x_sample <= 0.5)
@@ -163,16 +159,13 @@ ylabel('t');
 zlabel('y_2');
 
 figure
-plot(ttt, u1(:,1), ttt, u1(:,2), ttt, u2(:,1), ttt, u2(:,2)); hold on;
-legend("u11", "u12", "u21", "u22");
-figure
-
 plot(ttt, rho1); hold on
 plot(ttt, rho2);
 legend("rho v1", "rho v2")
 
-
-
+figure
+plot(ttt, u1(:,1), ttt, u1(:,2), ttt, u2(:,1), ttt, u2(:,2)); hold on;
+legend("u11", "u12", "u21", "u22");
 
 
 

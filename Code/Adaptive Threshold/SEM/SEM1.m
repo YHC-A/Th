@@ -21,8 +21,8 @@ A{2} = [1 - y1^2, 0.5; 1 - 0.1667*y1^2, -0.1];
 
 % D{1} = [1, 2; 1, 2];  % v = 1  
 % D{2} = [2, 3; 2, 3];  % v = 2  
-D{1} = [1, 1; 1, 1];  % v = 1  
-D{2} = [1, 1.5; 1, 1];  % v = 2 
+D{1} = [1, 2; 1, 2];  % v = 1  
+D{2} = [1, 2; 1, 2];  % v = 2 
 
 maxT1 = -0.1489;
 minT3 = -0.1667;
@@ -283,20 +283,25 @@ end
 %% Call solver
 [po, info] = sossolve(po);
 
-for j = 1: 2
-    for v = 1: 2
+for j = 1: d
+    for v = 1: d
         KB{v}{j}  = sosgetsol(po, KB{v}{j});
         KB{v}{j}  = sosgetsol(po, KB{v}{j});
     end
 end
 
 X = sosgetsol(po, X);
+G = sosgetsol(po, G);
 W1B = sosgetsol(po, W1B);
 W2B = sosgetsol(po, W2B);
 Q2B = sosgetsol(po, Q2B);
 Omega{1} = sosgetsol(po, Omega{1});
 Omega{2} = sosgetsol(po, Omega{2});
 
+G = [inv(X), I0; I0, inv(X)] * G * [inv(X), I0; I0, inv(X)];
+Q2 = inv(X) * Q2B * inv(X);
+W1 = inv(X) * W1B * inv(X);
+W2 = inv(X) * W2B * inv(X);
 
 for j = 1:2
     for v = 1:2
@@ -312,7 +317,7 @@ K22 = subs(K{2}{2}, [y1, y2], [1, 1]);
 
 save test3.mat
 toc; echo on;
-run SEM2.m 
+run SEM2.m   
 
 %% Function
 function [a] = a(g) % g is the position   
