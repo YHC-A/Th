@@ -1,7 +1,7 @@
 clc; clear; close all;
 tic; echo off;
 % load SEM_finish_calling_solver.mat
-load test1.mat
+load test7.mat
 % load ada0503_4.mat
 
 %% Time & Space 
@@ -32,17 +32,17 @@ u2  = zeros(N_t, 2);
 rhos1 = zeros(N_t, 1);
 rhos2 = zeros(N_t, 1);
 rho1 = zeros(N_t, 1);
-rho1(1) = 0.001;
+rho1(1) = 0.06;
 rho2 = zeros(N_t, 1);
-rho2(1) = 0.002;
-rc = 0.099;
+rho2(1) = 0.07;
+rc = 0.01;
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.1;
-    Y2(1,i)  = -0.3 * cos(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
-    yy1(1,i) =  0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
+    Y1(1,i)  =  0.5 * sin(pi*zzz(i));
+    Y2(1,i)  =  0.3 * sin(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
+    yy1(1,i) = -0.5 * pi^2 * sin(pi*zzz(i));
+    yy2(1,i) = -0.3 * pi^2 * sin(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
 end
 
 % The selected states for controller 

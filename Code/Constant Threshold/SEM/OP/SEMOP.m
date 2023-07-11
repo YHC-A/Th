@@ -38,10 +38,10 @@ yy2 = repmat(yy2, N, 1);
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.2;
-    Y2(1,i)  =  0.4 * sin(pi*zzz(i));
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.1;
+    Y2(1,i)  = -0.3 * cos(pi*zzz(i));
     yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
-    yy2(1,i) = -0.4 * pi^2 * sin(pi*zzz(i));
+    yy2(1,i) =  0.3 * pi^2 * cos(pi*zzz(i));
 end
 
 for it = 1: (N_t-1)
@@ -56,21 +56,21 @@ for it = 1: (N_t-1)
     end   
 end
 
-figure(1)
+figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y1)
 view(-40+90, 30);
-xlabel('x');
-ylabel('t');
-zlabel('y_1');
+xlabel('$x$', 'Interpreter','latex');
+ylabel('$t$', 'Interpreter','latex');
+zlabel('$y_1$', 'Interpreter','latex');
 
-figure(2)
+figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y2)
 view(-40+90, 30);
-xlabel('x');
-ylabel('t');
-zlabel('y_2');
+xlabel('$x$', 'Interpreter','latex');
+ylabel('$t$', 'Interpreter','latex');
+zlabel('$y_2$', 'Interpreter','latex');
 
 save SEMOP.mat
 

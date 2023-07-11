@@ -35,11 +35,11 @@ rho1 = zeros(N_t, 1);
 rho1(1) = 0.01;
 rho2 = zeros(N_t, 1);
 rho2(1) = 0.02;
-rc = 0.05;
+rc = 0.02;
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) - 0.4;
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) + 0.3;
     Y2(1,i)  = -0.3 * cos(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
     yy1(1,i) =  0.5 * pi^2 * cos(pi*zzz(i));
     yy2(1,i) = -0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
@@ -143,29 +143,31 @@ figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y1)
 view(-40+90, 30);
-xlabel('x');
-ylabel('t');
-zlabel('y_1');
+xlabel('$x$', 'Interpreter','latex');
+ylabel('$t$', 'Interpreter','latex');
+zlabel('$y_1$', 'Interpreter','latex');
 
 figure
 set(gcf, 'Renderer', 'ZBuffer');
 mesh(zzz, ttt, Y2)
 view(-40+90, 30);
-xlabel('x');
-ylabel('t');
-zlabel('y_2');
+xlabel('$x$', 'Interpreter','latex');
+ylabel('$t$', 'Interpreter','latex');
+zlabel('$y_2$', 'Interpreter','latex');
 
 figure
 plot(ttt, rho1); hold on
 plot(ttt, rho2);
-legend("rho v1", "rho v2")
+xlabel('$t$', 'Interpreter','latex');
+legend("$\rho_0$", "$rho_1$", 'Interpreter','latex')
 
 figure
 plot(ttt, u1(:,1)); hold on;
 plot(ttt, u1(:,2));
 plot(ttt, u2(:,1)); 
 plot(ttt, u2(:,2));
-legend("u11", "u12", "u21", "u22");
+xlabel('$t$', 'Interpreter','latex');
+legend("$u_{01}$", "$u_{02}$", "$u_{11}$", "$u_{12}$", 'Interpreter','latex');
 
 % figure
 % for it = 1: N_t-1
