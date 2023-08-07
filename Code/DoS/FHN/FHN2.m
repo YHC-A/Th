@@ -201,7 +201,7 @@ figure
 plot(ttt, rho1); hold on
 plot(ttt, rho2);
 xlabel('$t$', 'Interpreter','latex');
-legend("$\rho_0$", "$rho_1$", 'Interpreter','latex')
+legend("$\rho_0$", "$\rho_1$", 'Interpreter','latex')
 
 figure
 plot(ttt, u1(:,1)); hold on;
