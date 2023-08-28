@@ -42,12 +42,13 @@ N = round((l2-l1) / x_sample) + 1;
 
 % Time
 h_bar = 0.01;       % Maximum of h(t)
+% h_bar = 0.05;
 
 %% SOS program & Variable declear
 g1 = 0.5;
 g2 = 0.8;
-rho{1} = 0.1;
-rho{2} = 0.2;
+rho{1} = 0.02;
+rho{2} = 0.02;
 % rho{1} = 0.001;
 % rho{2} = 0.002;
 

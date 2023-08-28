@@ -39,10 +39,10 @@ rc = 0.01;
 
 %% Initial condition
 for i = 1: N
-    Y1(1,i)  =  0.5 * sin(pi*zzz(i));
-    Y2(1,i)  =  0.3 * sin(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
-    yy1(1,i) = -0.5 * pi^2 * sin(pi*zzz(i));
-    yy2(1,i) = -0.3 * pi^2 * sin(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
+    Y1(1,i)  =  0.5 * cos(pi*zzz(i)) +  0.1;
+    Y2(1,i)  =  0.3 * cos(pi*zzz(i));        %  0.1 * sin(pi*zzz(i)) at first
+    yy1(1,i) = -0.5 * pi^2 * cos(pi*zzz(i));
+    yy2(1,i) = -0.3 * pi^2 * cos(pi*zzz(i)); %  0.1 * sin(pi*zzz(i)) at first
 end
 
 % The selected states for controller 
