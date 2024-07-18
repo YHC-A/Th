@@ -1,6 +1,11 @@
 
 Simulations of my thesis.
 
-Example 1. Fitz-Hugh-Nagumo 方程 FHN
-Example 2. 自己寫的非線性偏微分方程式
-Example 3. To be decided
+Three control feedback
+  - Event-triggered feedback control
+  - Adaptive event-triggered feedback control
+  - Adaptive event-triggered feedback control under cyber-attack
+
+Two example
+  Example 1. Fitz-Hugh-Nagumo equation FHN
+  Example 2. Self-made nonlinear equation
